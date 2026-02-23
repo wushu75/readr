@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy – READR</title>
+  <meta name="description" content="READR's privacy policy. We believe in radical transparency: we collect almost nothing." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #0d0d0d;
+      --paper:  #f2efe8;
+      --cream:  #faf8f3;
+      --gold:   #c9a84c;
+      --muted:  #7a7060;
+      --border: rgba(255,255,255,0.07);
+      --serif:  'Playfair Display', Georgia, serif;
+      --mono:   'DM Mono', monospace;
+      --sans:   'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--sans);
+      font-weight: 300;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* Grain */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 52px;
+      background: rgba(13,13,13,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--serif);
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .nav-back {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(242,239,232,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--gold); }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 52px 60px;
+      border-bottom: 1px solid var(--border);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(38px, 5vw, 62px);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: rgba(242,239,232,0.6);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    .last-updated {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(242,239,232,0.3);
+      letter-spacing: 0.08em;
+      margin-top: 28px;
+    }
+
+    /* ── TL;DR box ───────────────────────────────────────────── */
+    .tldr {
+      max-width: 900px;
+      margin: 48px auto 0;
+      padding: 0 52px;
+    }
+
+    .tldr-inner {
+      background: rgba(201,168,76,0.07);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 12px;
+      padding: 28px 32px;
+    }
+
+    .tldr-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tldr-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(201,168,76,0.2);
+    }
+
+    .tldr-points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tldr-points li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .tldr-points li::before {
+      content: '✦';
+      color: var(--gold);
+      font-size: 10px;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ── Content ─────────────────────────────────────────────── */
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 52px 100px;
+    }
+
+    /* Section */
+    .policy-section {
+      padding: 44px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .policy-section:last-child { border-bottom: none; }
+
+    .section-num {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .policy-section h2 {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--paper);
+    }
+
+    .policy-section p {
+      font-size: 15px;
+      color: rgba(242,239,232,0.72);
+      margin-bottom: 16px;
+      line-height: 1.75;
+    }
+    .policy-section p:last-child { margin-bottom: 0; }
+
+    .policy-section ul {
+      list-style: none;
+      margin: 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .policy-section ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 15px;
+      color: rgba(242,239,232,0.72);
+      line-height: 1.6;
+    }
+
+    .policy-section ul li::before {
+      content: '—';
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 12px;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .policy-section strong {
+      color: var(--paper);
+      font-weight: 500;
+    }
+
+    .policy-section a {
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(201,168,76,0.3);
+      transition: border-color 0.2s;
+    }
+    .policy-section a:hover { border-color: var(--gold); }
+
+    /* Highlight box */
+    .highlight-box {
+      background: rgba(255,255,255,0.04);
+      border-left: 2px solid var(--gold);
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 20px 0;
+      font-size: 15px;
+      color: rgba(242,239,232,0.8);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    /* Table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    .data-table th {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: rgba(242,239,232,0.65);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .data-table td:first-child { color: var(--paper); font-weight: 400; }
+    .data-table tr:last-child td { border-bottom: none; }
+
+    /* ── Contact footer ──────────────────────────────────────── */
+    .contact-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 52px 80px;
+    }
+
+    .contact-inner {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .contact-inner h3 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .contact-inner p {
+      font-size: 13px;
+      color: rgba(242,239,232,0.5);
+    }
+
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 8px;
+      color: var(--gold);
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      transition: background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .contact-email:hover {
+      background: rgba(201,168,76,0.08);
+      border-color: var(--gold);
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      padding: 28px 52px;
+      border-top: 1px solid var(--border);
+      background: #080808;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo {
+      font-family: var(--serif);
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      color: rgba(201,168,76,0.4);
+      font-size: 13px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(242,239,232,0.25);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(242,239,232,0.2);
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 760px) {
+      nav { padding: 16px 24px; }
+      .hero, .tldr, .content, .contact-section { padding-left: 24px; padding-right: 24px; }
+      .hero { padding-top: 52px; }
+      .contact-inner { flex-direction: column; align-items: flex-start; }
+      footer { padding: 24px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a href="index.html" class="nav-logo">READR</a>
+  <a href="readr-landing.html" class="nav-back">← Back to home</a>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <span class="eyebrow">Legal · Privacy Policy</span>
+  <h1>We collect<br/><em>almost nothing.</em></h1>
+  <p class="hero-sub">
+    READR is built on a simple belief: your reading habits are yours. We designed the extension to work entirely on your device, without needing to know who you are or what you read.
+  </p>
+  <p class="last-updated">Last updated: February 2026 · Effective immediately</p>
+</div>
+
+<!-- TL;DR -->
+<div class="tldr">
+  <div class="tldr-inner">
+    <div class="tldr-label">TL;DR — Plain English Summary</div>
+    <ul class="tldr-points">
+      <li>READR runs entirely in your browser. Your articles never leave your device.</li>
+      <li>We don't track what you read, when you read it, or how long you spend reading.</li>
+      <li>Settings (theme, font size, etc.) are stored locally via Chrome's sync storage — controlled by you, not us.</li>
+      <li>The only time we see your data: when you pay for Pro (Stripe handles it) or email us for support.</li>
+      <li>We don't sell data. We don't run ads. We make money from the $19.99 one-time purchase.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Policy content -->
+<div class="content">
+
+  <div class="policy-section">
+    <span class="section-num">01</span>
+    <h2>Who we are</h2>
+    <p>
+      READR is a Chrome browser extension that provides a distraction-free reading view for web articles. It is operated by <strong>READR</strong> ("we," "us," or "our"). If you have questions about this policy, you can reach us at <a href="mailto:privacy@readr.uk">privacy@readr.uk</a>.
+    </p>
+    <p>
+      This Privacy Policy applies to the READR Chrome extension, the READR website at readr.app, and any related services we operate.
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <span class="section-num">02</span>
+    <h2>What we collect — and what we don't</h2>
+
+    <div class="highlight-box">
+      "The extension has no server of its own to send your data to. All reading, extraction, and display happens locally in your browser."
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Data type</th>
+          <th>Collected?</th>
+          <th>Where it lives</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Articles you read</td>
+          <td>Never</td>
+          <td>Processed in-browser only, never transmitted</td>
+        </tr>
+        <tr>
+          <td>URLs you visit</td>
+          <td>Never</td>
+          <td>Not logged or stored anywhere</td>
+        </tr>
+        <tr>
+          <td>Reading preferences<br/>(theme, font, width)</td>
+          <td>Yes — locally only</td>
+          <td>Chrome's <code>storage.sync</code> API on your device / Google account</td>
+        </tr>
+        <tr>
+          <td>Auto-open domains</td>
+          <td>Yes — locally only</td>
+          <td>Chrome's <code>storage.sync</code> API on your device / Google account</td>
+        </tr>
+        <tr>
+          <td>License key (Pro)</td>
+          <td>Yes — locally only</td>
+          <td>Chrome's <code>storage.sync</code> API, and our license server for validation</td>
+        </tr>
+        <tr>
+          <td>Email address</td>
+          <td>Only at purchase</td>
+          <td>Stripe's servers (payment processing) and our license database</td>
+        </tr>
+        <tr>
+          <td>Payment details</td>
+          <td>Never by us</td>
+          <td>Handled exclusively by Stripe — we never see card numbers</td>
+        </tr>
+        <tr>
+          <td>Analytics / telemetry</td>
+          <td>Never</td>
+          <td>We have no analytics in the extension</td>
+        </tr>
+        <tr>
+          <td>Crash reports</td>
+          <td>Never automatically</td>
+          <td>Only if you choose to email us about a bug</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="policy-section">
+    <span class="section-num">03</span>
+    <h2>Chrome storage — how your settings sync</h2>
+    <p>
+      READR uses the <strong>Chrome <code>storage.sync</code> API</strong> to remember your preferences (theme, font size, line width, auto-open domains, and Pro status). This is a built-in Chrome feature:
+    </p>
+    <ul>
+      <li>If you're signed into Chrome, Google syncs this data across your devices — subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
+      <li>We never have access to this data. It lives in your Chrome profile.</li>
+      <li>You can clear it at any time: <code>chrome://settings/clearBrowserData</code> or by removing the extension.</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <span class="section-num">04</span>
+    <h2>Pro purchases and license keys</h2>
+    <p>
+      When you purchase READR Pro, payment is processed by <strong>Stripe, Inc.</strong> Stripe is a certified PCI-DSS Level 1 service provider. We never receive or store your full card number, CVV, or any raw payment credentials.
+    </p>
+    <p>
+      What we <em>do</em> store on our servers:
+    </p>
+    <ul>
+      <li>Your <strong>email address</strong> — used to send your license key and for support inquiries.</li>
+      <li>Your <strong>license key</strong> — a randomly generated token tied to your purchase, used to verify Pro status.</li>
+      <li>The <strong>Stripe session ID</strong> — for reconciliation and fraud prevention.</li>
+    </ul>
+    <p>
+      We retain purchase records for up to <strong>7 years</strong> for accounting and legal compliance. You can request deletion of your email at any time; we will anonymise your record while retaining the transaction ID for accounting purposes.
+    </p>
+    <p>
+      Stripe's privacy policy: <a href="https://stripe.com/privacy" target="_blank" rel="noopener">stripe.com/privacy</a>
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <span class="section-num">05</span>
+    <h2>The website (readr.app)</h2>
+    <p>
+      The READR website may collect basic server logs (IP address, browser type, page requested, timestamp) through our hosting provider. These are used only for security and uptime monitoring and are not linked to your identity or reading habits.
+    </p>
+    <p>
+      We do <strong>not</strong> use Google Analytics, Facebook Pixel, or any other third-party tracking or advertising scripts on readr.app.
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <span class="section-num">06</span>
+    <h2>Permissions we request — and why</h2>
+    <p>
+      The Chrome Web Store requires us to disclose why each permission is used. Here's a plain-English explanation:
+    </p>
+    <ul>
+      <li><strong>activeTab</strong> — Needed to activate the reading overlay on the page you're currently viewing. We only access the tab when you click the READR icon.</li>
+      <li><strong>scripting</strong> — Needed to inject the reading overlay and Readability parser into the page. No scripts are injected on pages you haven't asked READR to open on.</li>
+      <li><strong>storage</strong> — Needed to save your settings (theme, font, etc.) locally via Chrome's storage API.</li>
+      <li><strong>tabs</strong> — Needed to open the upgrade page in a new tab when you click "Upgrade to Pro."</li>
+    </ul>
+    <p>
+      We do not request broad host permissions. We do not read your browsing history.
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <span class="section-num">07</span>
+    <h2>Third-party services</h2>
+    <p>
+      READR uses a small number of third-party services, listed here in full:
+    </p>
+    <ul>
+      <li><strong>Stripe</strong> — payment processing for Pro purchases. <a href="https://stripe.com/privacy" target="_blank" rel="noopener">stripe.com/privacy</a></li>
+      <li><strong>Google Fonts</strong> — typography on the website only (not in the extension). Subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>. The extension itself uses system fonts.</li>
+      <li><strong>Mozilla Readability.js</strong> — an open-source content-extraction library that runs entirely locally in your browser. It makes no network requests. <a href="https://github.com/mozilla/readability" target="_blank" rel="noopener">Source code</a>.</li>
+    </ul>
+    <p>
+      We do not use any advertising networks, data brokers, or analytics platforms.
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <span class="section-num">08</span>
+    <h2>Your rights</h2>
+    <p>
+      Depending on where you live, you may have rights including the right to access, correct, or delete personal data we hold about you. Because we collect so little, there usually isn't much to request — but we honour all lawful requests promptly.
+    </p>
+    <ul>
+      <li><strong>Access</strong> — you can ask what data we hold about you (typically: your email and license key).</li>
+      <li><strong>Deletion</strong> — you can ask us to delete your email. We will do so and anonymise your purchase record.</li>
+      <li><strong>Correction</strong> — if your email changed, let us know and we'll update it.</li>
+      <li><strong>Portability</strong> — we can provide a copy of any data we hold in a machine-readable format.</li>
+      <li><strong>Opt-out of sale</strong> — we don't sell data. There's nothing to opt out of.</li>
+    </ul>
+    <p>
+      To exercise any of these rights, email <a href="mailto:privacy@readr.uk">privacy@readr.uk</a>. We'll respond within 30 days.
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <span class="section-num">09</span>
+    <h2>Children's privacy</h2>
+    <p>
+      READR is not directed at children under 13. We do not knowingly collect personal information from children. If you believe a child has provided us with personal information, please contact us and we will delete it promptly.
+    </p>
+  </div>
+
+  <div class="policy-section">
+    <span class="section-num">10</span>
+    <h2>Changes to this policy</h2>
+    <p>
+      If we make material changes to this policy, we will update the date at the top of this page and, for significant changes, notify Pro users by email. Continued use of READR after changes take effect constitutes acceptance of the updated policy.
+    </p>
+    <p>
+      We're committed to never making this policy more permissive without giving you the chance to review it first.
+    </p>
+  </div>
+
+</div><!-- /content -->
+
+<!-- Contact -->
+<div class="contact-section">
+  <div class="contact-inner">
+    <div>
+      <h3>Questions? We read every email.</h3>
+      <p>Privacy requests, data deletion, anything else — we respond within 30 days.</p>
+    </div>
+    <a href="mailto:privacy@readr.uk" class="contact-email">
+      ✉ privacy@readr.uk
+    </a>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">READR</div>
+  <div class="footer-links">
+    <a href="readr-landing.html">Home</a>
+    <a href="readr-privacy.html" aria-current="page">Privacy</a>
+    <a href="mailto:support@readr.uk">Support</a>
+  </div>
+  <div class="footer-copy">© 2026 READR</div>
+</footer>
+
+</body>
+</html>

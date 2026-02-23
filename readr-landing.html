@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>READR – Clean page, one click.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Reset & Variables ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:     #0d0d0d;
+      --paper:   #f2efe8;
+      --cream:   #faf8f3;
+      --gold:    #c9a84c;
+      --gold2:   #e8c97a;
+      --muted:   #7a7060;
+      --border:  rgba(0,0,0,0.12);
+      --serif:   'Playfair Display', Georgia, serif;
+      --mono:    'DM Mono', monospace;
+      --sans:    'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--sans);
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ── Grain overlay ─────────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ── Nav ───────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 52px;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      opacity: 0;
+      animation: fade-down 0.8s 0.1s ease forwards;
+    }
+
+    @keyframes fade-down {
+      from { opacity:0; transform: translateY(-10px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    .nav-logo {
+      font-family: var(--serif);
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(242,239,232,0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── Hero ──────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Left panel */
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 140px 60px 80px 72px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fade-up 0.7s 0.4s ease forwards;
+    }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(52px, 6vw, 88px);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+      opacity: 0;
+      animation: fade-up 0.7s 0.5s ease forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-tagline {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: rgba(242,239,232,0.45);
+      margin-bottom: 44px;
+      opacity: 0;
+      animation: fade-up 0.7s 0.6s ease forwards;
+    }
+
+    .hero-quote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.55;
+      color: rgba(242,239,232,0.82);
+      max-width: 440px;
+      margin-bottom: 48px;
+      padding-left: 20px;
+      border-left: 2px solid var(--gold);
+      opacity: 0;
+      animation: fade-up 0.7s 0.7s ease forwards;
+    }
+
+    .hero-quote strong {
+      font-style: normal;
+      color: var(--paper);
+      font-weight: 700;
+    }
+
+    /* CTA Buttons */
+    .cta-group {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fade-up 0.7s 0.85s ease forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 28px;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.15);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover::after { opacity: 1; }
+    .btn-primary:hover { transform: translateY(-2px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 28px;
+      background: transparent;
+      color: var(--paper);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid rgba(242,239,232,0.25);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    /* Social proof */
+    .social-proof {
+      margin-top: 52px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      opacity: 0;
+      animation: fade-up 0.7s 1s ease forwards;
+    }
+
+    .avatars {
+      display: flex;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--ink);
+      margin-left: -8px;
+      font-family: var(--serif);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .avatar:first-child { margin-left: 0; }
+
+    .a1 { background: #7c6ea0; }
+    .a2 { background: #4a7c6e; }
+    .a3 { background: #a05a3a; }
+    .a4 { background: #3a5ea0; }
+    .a5 { background: #8a7a3a; }
+
+    .social-text {
+      font-size: 13px;
+      color: rgba(242,239,232,0.5);
+      line-height: 1.5;
+    }
+
+    .social-text strong {
+      color: var(--paper);
+      font-weight: 500;
+    }
+
+    /* Right panel – mock browser */
+    .hero-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 60px 60px 20px;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      animation: fade-left 0.9s 0.6s ease forwards;
+    }
+
+    @keyframes fade-left {
+      from { opacity:0; transform: translateX(30px); }
+      to   { opacity:1; transform: translateX(0); }
+    }
+
+    .browser-mock {
+      width: 100%;
+      max-width: 440px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.4),
+        0 40px 80px rgba(0,0,0,0.6),
+        0 0 60px rgba(201,168,76,0.07);
+      background: #1a1714;
+    }
+
+    .browser-bar {
+      background: #111;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #28c940; }
+
+    .browser-url {
+      flex: 1;
+      background: rgba(255,255,255,0.07);
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(255,255,255,0.35);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* READR overlay inside browser */
+    .readr-ui {
+      padding: 0;
+    }
+
+    .readr-toolbar-mock {
+      background: #0f0e0c;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .readr-badge {
+      font-family: var(--serif);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      margin-right: auto;
+    }
+
+    .mock-pill {
+      font-family: var(--mono);
+      font-size: 9px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.05em;
+    }
+
+    .mock-pill.active {
+      background: var(--gold);
+      color: var(--ink);
+    }
+
+    .readr-content-mock {
+      padding: 28px 28px 32px;
+    }
+
+    .mock-h1 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 16px;
+      color: var(--paper);
+    }
+
+    .mock-line {
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.12);
+      margin-bottom: 8px;
+    }
+
+    .mock-line.short { width: 70%; }
+    .mock-line.xshort { width: 45%; }
+
+    .mock-spacer { height: 16px; }
+
+    .mock-img {
+      width: 100%;
+      height: 80px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+      margin-bottom: 18px;
+      border: 1px solid rgba(201,168,76,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(201,168,76,0.4);
+      letter-spacing: 0.1em;
+    }
+
+    /* Divider between hero panels */
+    .hero-divider {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.2) 30%, rgba(201,168,76,0.2) 70%, transparent);
+      z-index: 1;
+    }
+
+    /* Background accent */
+    .hero-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+      right: -100px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    @keyframes fade-up {
+      from { opacity:0; transform: translateY(20px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    /* ── Features strip ────────────────────────────────────────── */
+    .features-strip {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: #111;
+    }
+
+    .feature-item {
+      padding: 48px 52px;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .feature-item:last-child { border-right: none; }
+    .feature-item:hover { background: rgba(201,168,76,0.04); }
+
+    .feature-num {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .feature-title {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--paper);
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(242,239,232,0.5);
+    }
+
+    /* ── Pull quote ────────────────────────────────────────────── */
+    .pullquote {
+      padding: 100px 72px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pullquote::before {
+      content: '"';
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--serif);
+      font-size: 320px;
+      color: rgba(201,168,76,0.04);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .pullquote-text {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(26px, 4vw, 46px);
+      line-height: 1.3;
+      max-width: 860px;
+      margin: 0 auto 28px;
+      color: var(--paper);
+      position: relative;
+    }
+
+    .pullquote-text em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .pullquote-attr {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(242,239,232,0.35);
+    }
+
+    /* ── How it works ──────────────────────────────────────────── */
+    .steps-section {
+      padding: 100px 72px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      background: #0a0a0a;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 52px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(201,168,76,0.2);
+      max-width: 200px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+
+    .step {
+      padding: 0 48px 0 0;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      margin-right: 48px;
+    }
+    .step:last-child {
+      border-right: none;
+      margin-right: 0;
+      padding-right: 0;
+    }
+
+    .step-number {
+      font-family: var(--serif);
+      font-size: 72px;
+      font-weight: 900;
+      color: rgba(201,168,76,0.12);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .step-title {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--paper);
+    }
+
+    .step-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(242,239,232,0.45);
+    }
+
+    /* ── Final CTA ─────────────────────────────────────────────── */
+    .final-cta {
+      padding: 120px 72px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .final-cta-title {
+      font-family: var(--serif);
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .final-cta-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .final-cta-sub {
+      font-size: 16px;
+      color: rgba(242,239,232,0.45);
+      margin-bottom: 44px;
+      font-weight: 300;
+      position: relative;
+    }
+
+    .final-cta .cta-group {
+      justify-content: center;
+      opacity: 1;
+      animation: none;
+      position: relative;
+    }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    footer {
+      padding: 32px 72px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #080808;
+    }
+
+    .footer-logo {
+      font-family: var(--serif);
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      color: rgba(201,168,76,0.5);
+      font-size: 14px;
+    }
+
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(242,239,232,0.2);
+    }
+
+    /* ── Waitlist modal ────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: #161411;
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 4px;
+      padding: 52px;
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-close {
+      position: absolute;
+      top: 20px; right: 20px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.3);
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--paper); }
+
+    .modal-title {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--paper);
+    }
+
+    .modal-sub {
+      font-size: 13px;
+      color: rgba(242,239,232,0.45);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--paper);
+      font-family: var(--sans);
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 12px;
+      border-radius: 2px;
+      transition: border-color 0.2s;
+    }
+    .modal-input:focus { border-color: var(--gold); }
+    .modal-input::placeholder { color: rgba(255,255,255,0.2); }
+
+    .modal-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      border-radius: 2px;
+    }
+    .modal-submit:hover { opacity: 0.88; }
+
+    .modal-success {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    .modal-success.show { display: block; }
+    .modal-success-icon {
+      font-size: 40px;
+      margin-bottom: 14px;
+    }
+    .modal-success-title {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .modal-success-sub {
+      font-size: 13px;
+      color: rgba(242,239,232,0.45);
+    }
+
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 18px 28px; }
+      .nav-links { display: none; }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+      .hero-left { padding: 120px 28px 60px; }
+      .hero-right { display: none; }
+      .hero-divider { display: none; }
+
+      .features-strip { grid-template-columns: 1fr; }
+      .feature-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+      .pullquote { padding: 70px 28px; }
+      .steps-section { padding: 70px 28px; }
+      .steps-grid { grid-template-columns: 1fr; gap: 48px; }
+      .step { border-right: none; margin-right: 0; padding-right: 0; }
+
+      .final-cta { padding: 80px 28px; }
+      footer { padding: 28px; flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ─────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">READR</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="readr-privacy.html" onclick="openModal()">Privacy</a></li>
+  </ul>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-divider"></div>
+
+  <div class="hero-left">
+    <span class="hero-eyebrow">✦ Chrome Extension · Free to start</span>
+
+    <h1 class="hero-title">
+      Clean<br/><em>page,</em><br/>one click.
+    </h1>
+
+    <p class="hero-tagline">// reader mode that actually works</p>
+
+    <blockquote class="hero-quote">
+      "Finally — reader mode that works on <strong>any</strong> site.
+      No ads. No clutter. One click → <strong>perfect PDF.</strong>"
+    </blockquote>
+
+    <div class="cta-group">
+      <a href="#" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+        Install Extension
+      </a>
+    </div>
+
+    <div class="social-proof">
+      <div class="avatars">
+        <div class="avatar a1">D</div>
+        <div class="avatar a2">S</div>
+        <div class="avatar a3">M</div>
+        <div class="avatar a4">K</div>
+        <div class="avatar a5">R</div>
+      </div>
+      <p class="social-text">
+        Used by <strong>500+ designers,</strong><br/>researchers &amp; students
+      </p>
+    </div>
+  </div>
+
+  <!-- Browser mockup -->
+  <div class="hero-right">
+    <div class="browser-mock">
+      <div class="browser-bar">
+        <div class="browser-dots">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+        </div>
+        <div class="browser-url">medium.com/article/the-future-of...</div>
+      </div>
+      <div class="readr-ui">
+        <div class="readr-toolbar-mock">
+          <span class="readr-badge">✦ READR</span>
+          <span class="mock-pill active">☽ Dark</span>
+          <span class="mock-pill">A–</span>
+          <span class="mock-pill">A+</span>
+          <span class="mock-pill">Med</span>
+          <span class="mock-pill" style="background: rgba(201,168,76,0.2); color: var(--gold);">⬇ PDF</span>
+        </div>
+        <div class="readr-content-mock">
+          <div class="mock-img">[ article image ]</div>
+          <div class="mock-h1">The Future of Deep Work in a Distracted World</div>
+          <div class="mock-line"></div>
+          <div class="mock-line"></div>
+          <div class="mock-line short"></div>
+          <div class="mock-spacer"></div>
+          <div class="mock-line"></div>
+          <div class="mock-line"></div>
+          <div class="mock-line xshort"></div>
+          <div class="mock-spacer"></div>
+          <div class="mock-line"></div>
+          <div class="mock-line short"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features strip ───────────────────────────────────────────────── -->
+<div id="features" class="features-strip">
+  <div class="feature-item">
+    <span class="feature-num">01</span>
+    <h3 class="feature-title">Works everywhere</h3>
+    <p class="feature-desc">From Medium to obscure research journals — READR extracts the content that matters, on any URL, without configuration.</p>
+  </div>
+  <div class="feature-item">
+    <span class="feature-num">02</span>
+    <h3 class="feature-title">Your typography</h3>
+    <p class="feature-desc">Light or dark. Small or large. Narrow column or wide. Settings sync across devices and persist between sessions.</p>
+  </div>
+  <div class="feature-item">
+    <span class="feature-num">03</span>
+    <h3 class="feature-title">PDF in one click</h3>
+    <p class="feature-desc">Pro users export a perfectly formatted PDF of any article — your reading style, not the website's chaotic print layout.</p>
+  </div>
+</div>
+
+<!-- ── Pull quote ───────────────────────────────────────────────────── -->
+<section class="pullquote">
+  <p class="pullquote-text">
+    "The web was supposed to be about <em>words.</em> READR gives them back."
+  </p>
+  <span class="pullquote-attr">— READR user, Designer at Figma</span>
+</section>
+
+<!-- ── How it works ─────────────────────────────────────────────────── -->
+<section id="how" class="steps-section">
+  <div class="section-label">How it works</div>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-number">1</div>
+      <h3 class="step-title">Install the extension</h3>
+      <p class="step-desc">One click from the Chrome Web Store. No account, no signup required to start reading in clean mode.</p>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <h3 class="step-title">Click the icon</h3>
+      <p class="step-desc">On any article or blog post, click the READR icon in your toolbar. The overlay appears instantly — no page reload.</p>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <h3 class="step-title">Read. Or export.</h3>
+      <p class="step-desc">Adjust your preferences. Press ESC to return. Pro users hit ⬇ PDF for a perfect export, every time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Final CTA ─────────────────────────────────────────────────────── -->
+<section class="final-cta">
+  <h2 class="final-cta-title">
+    The web,<br/><em>distraction-free.</em>
+  </h2>
+  <p class="final-cta-sub">Free to use. Pro for $19.99, one time. No subscription. Ever.</p>
+  <div class="cta-group">
+    <a href="#" class="btn-primary">Install Chrome Extension</a>
+    
+  </div>
+</section>
+
+<!-- ── Footer ────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-logo">READR</div>
+  <div class="footer-copy">© 2026 READR · Made for readers, by readers</div>
+</footer>
+
+<!-- ── Waitlist Modal ─────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="modal" onclick="closeModalOnBg(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+
+    <div id="modal-form-content">
+      <h2 class="modal-title">Join the waitlist</h2>
+      <p class="modal-sub">Get early access to new features and Pro launch pricing. No spam — ever.</p>
+      <input type="text" class="modal-input" placeholder="Your name" id="wl-name" />
+      <input type="email" class="modal-input" placeholder="Your email address" id="wl-email" />
+      <button class="modal-submit" onclick="submitWaitlist()">Reserve my spot →</button>
+    </div>
+
+    <div class="modal-success" id="modal-success">
+      <div class="modal-success-icon">✦</div>
+      <h3 class="modal-success-title">You're on the list.</h3>
+      <p class="modal-success-sub">We'll reach out when your spot is ready.<br/>Welcome to the quiet side of the web.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal() {
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  function closeModalOnBg(e) {
+    if (e.target === document.getElementById('modal')) closeModal();
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  function submitWaitlist() {
+    const email = document.getElementById('wl-email').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('wl-email').style.borderColor = '#ef4444';
+      document.getElementById('wl-email').focus();
+      return;
+    }
+    // TODO: POST to your backend / Mailchimp / ConvertKit / etc.
+    // fetch('/api/waitlist', { method:'POST', body: JSON.stringify({ email, name }) })
+    document.getElementById('modal-form-content').style.display = 'none';
+    document.getElementById('modal-success').classList.add('show');
+    setTimeout(closeModal, 3200);
+  }
+
+  // Subtle scroll-reveal for feature items
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.transition = `opacity 0.6s ${i * 0.1}s ease, transform 0.6s ${i * 0.1}s ease`;
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.feature-item, .step').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
