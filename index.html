@@ -825,13 +825,18 @@
 </head>
 <body>
 
+<!-- ── Promo Banner ─────────────────────────────────────────────────── -->
+<div style="background: #C9A84C; color: #0D0D0D; text-align: center; padding: 10px 20px; font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 0.04em; position: relative; z-index: 100;">
+  🎁 <strong>50% off Pro today</strong> — use code <strong>PRODUCTHUNT</strong> at checkout &nbsp;·&nbsp; $9.99 instead of $19.99 &nbsp;·&nbsp; Lifetime access, no subscription
+</div>
+
 <!-- ── Nav ─────────────────────────────────────────────────────────── -->
 <nav>
   <div class="nav-logo">READR</div>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#how">How it works</a></li>
-    <li><a href="readr-privacy.html" onclick="openModal()">Privacy</a></li>
+    <li><a href="readr-privacy.html">Privacy</a></li>
   </ul>
 </nav>
 
@@ -855,23 +860,15 @@
     </blockquote>
 
     <div class="cta-group">
-      <a href="https://chromewebstore.google.com/detail/readr-%E2%80%93-clean-page-one-cl/acpeognnfhdbfdmdpkfbjgppjpgpekia?authuser=0&hl=en-GB" target="_blank" rel="noopener" class="btn-primary" class="btn-primary">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+      <a href="https://chromewebstore.google.com/detail/readr-%E2%80%93-clean-page-one-cl/acpeognnfhdbfdmdpkfbjgppjpgpekia?authuser=0&hl=en-GB" target="_blank" rel="noopener" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l-5-5 1.4-1.4 2.6 2.6V4h2v8.2l2.6-2.6L17 11l-5 5zm-7 4v-2h14v2H5z"/></svg>
         Install Extension
       </a>
-      <a href="https://www.producthunt.com/products/readr-2?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-readr-2" target="_blank" rel="noopener noreferrer"><img alt="READR - The reader mode Chrome forgot to build | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1085841&amp;theme=light&amp;t=1772039624713"></a>
     </div>
 
     <div class="social-proof">
-      <div class="avatars">
-        <div class="avatar a1">D</div>
-        <div class="avatar a2">S</div>
-        <div class="avatar a3">M</div>
-        <div class="avatar a4">K</div>
-        <div class="avatar a5">R</div>
-      </div>
       <p class="social-text">
-        Used by <strong>500+ designers,</strong><br/>researchers &amp; students
+        Free to install · No account required · <strong>0 uninstalls</strong>
       </p>
     </div>
   </div>
@@ -934,14 +931,6 @@
   </div>
 </div>
 
-<!-- ── Pull quote ───────────────────────────────────────────────────── -->
-<section class="pullquote">
-  <p class="pullquote-text">
-    "The web was supposed to be about <em>words.</em> READR gives them back."
-  </p>
-  <span class="pullquote-attr">— READR user, Designer at Figma</span>
-</section>
-
 <!-- ── How it works ─────────────────────────────────────────────────── -->
 <section id="how" class="steps-section">
   <div class="section-label">How it works</div>
@@ -971,7 +960,7 @@
   </h2>
   <p class="final-cta-sub">Free to use. Pro for $19.99, one time. No subscription. Ever.</p>
   <div class="cta-group">
-    <a href="https://chromewebstore.google.com/detail/readr-%E2%80%93-clean-page-one-cl/acpeognnfhdbfdmdpkfbjgppjpgpekia?authuser=0&hl=en-GB" target="_blank" rel="noopener" class="btn-primary" class="btn-primary">Install Chrome Extension</a>
+    <a href="https://chromewebstore.google.com/detail/readr-%E2%80%93-clean-page-one-cl/acpeognnfhdbfdmdpkfbjgppjpgpekia?authuser=0&hl=en-GB" target="_blank" rel="noopener" class="btn-primary">Install Chrome Extension</a>
     
   </div>
 </section>
@@ -980,62 +969,11 @@
 <footer>
   <div class="footer-logo">READR</div>
   <div class="footer-copy">© 2026 READR · Made for readers, by readers</div>
-
 </footer>
 
-<!-- ── Waitlist Modal ─────────────────────────────────────────────────── -->
-<div class="modal-overlay" id="modal" onclick="closeModalOnBg(event)">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">×</button>
 
-    <div id="modal-form-content">
-      <h2 class="modal-title">Join the waitlist</h2>
-      <p class="modal-sub">Get early access to new features and Pro launch pricing. No spam — ever.</p>
-      <input type="text" class="modal-input" placeholder="Your name" id="wl-name" />
-      <input type="email" class="modal-input" placeholder="Your email address" id="wl-email" />
-      <button class="modal-submit" onclick="submitWaitlist()">Reserve my spot →</button>
-    </div>
-
-    <div class="modal-success" id="modal-success">
-      <div class="modal-success-icon">✦</div>
-      <h3 class="modal-success-title">You're on the list.</h3>
-      <p class="modal-success-sub">We'll reach out when your spot is ready.<br/>Welcome to the quiet side of the web.</p>
-    </div>
-  </div>
-</div>
 
 <script>
-  function openModal() {
-    document.getElementById('modal').classList.add('open');
-  }
-
-  function closeModal() {
-    document.getElementById('modal').classList.remove('open');
-  }
-
-  function closeModalOnBg(e) {
-    if (e.target === document.getElementById('modal')) closeModal();
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-  });
-
-  function submitWaitlist() {
-    const email = document.getElementById('wl-email').value.trim();
-    if (!email || !email.includes('@')) {
-      document.getElementById('wl-email').style.borderColor = '#ef4444';
-      document.getElementById('wl-email').focus();
-      return;
-    }
-    // TODO: POST to your backend / Mailchimp / ConvertKit / etc.
-    // fetch('/api/waitlist', { method:'POST', body: JSON.stringify({ email, name }) })
-    document.getElementById('modal-form-content').style.display = 'none';
-    document.getElementById('modal-success').classList.add('show');
-    setTimeout(closeModal, 3200);
-  }
-
-  // Subtle scroll-reveal for feature items
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
       if (entry.isIntersecting) {
