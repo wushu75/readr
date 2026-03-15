@@ -868,7 +868,7 @@
 
     <div class="social-proof">
       <p class="social-text">
-        Free to install · No account required · <strong>0 uninstalls</strong>
+        Free to install · No account required · <strong>0 uninstalls</strong> · <strong><span id="install-count">37</span> installs and counting</strong>
       </p>
     </div>
   </div>
@@ -990,6 +990,17 @@
     el.style.transform = 'translateY(24px)';
     observer.observe(el);
   });
+</script>
+
+<script>
+  // Fetch live install count from stats.json
+  fetch('./stats.json?v=' + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      const el = document.getElementById('install-count');
+      if (el && data.installs) el.textContent = data.installs;
+    })
+    .catch(() => {}); // silently fail — shows fallback number (37)
 </script>
 
 </body>
