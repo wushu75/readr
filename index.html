@@ -234,9 +234,36 @@
       transform: translateY(-2px);
     }
 
+    /* Chrome badge */
+    .chrome-endorsed {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      margin-bottom: 0;
+      padding: 7px 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: rgba(242,239,232,0.6);
+      opacity: 0;
+      animation: fade-up 0.7s 0.95s ease forwards;
+    }
+
+    .chrome-endorsed-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: conic-gradient(#4285F4 0% 25%, #EA4335 25% 50%, #FBBC05 50% 75%, #34A853 75% 100%);
+      flex-shrink: 0;
+    }
+
     /* Social proof */
     .social-proof {
-      margin-top: 52px;
+      margin-top: 20px;
       display: flex;
       align-items: center;
       gap: 16px;
@@ -864,6 +891,11 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l-5-5 1.4-1.4 2.6 2.6V4h2v8.2l2.6-2.6L17 11l-5 5zm-7 4v-2h14v2H5z"/></svg>
         Install Extension
       </a>
+    </div>
+
+    <div class="chrome-endorsed">
+      <span class="chrome-endorsed-dot"></span>
+      Organically recommended by Chrome · No ad spend
     </div>
 
     <div class="social-proof">
