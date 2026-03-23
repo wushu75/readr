@@ -824,6 +824,35 @@
       color: rgba(242,239,232,0.45);
     }
 
+    /* ── Video demo ────────────────────────────────────────────── */
+    .video-wrap {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 40px 40px 20px;
+    }
+
+    .video-wrap video {
+      width: 100%;
+      max-width: 560px;
+      border-radius: 12px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5),
+                  0 0 0 1px rgba(255,255,255,0.06);
+      display: block;
+    }
+
+    .video-caption {
+      margin-top: 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: rgba(242,239,232,0.35);
+      text-transform: uppercase;
+    }
+
     /* ── Responsive ────────────────────────────────────────────── */
     @media (max-width: 900px) {
       nav { padding: 18px 28px; }
@@ -900,46 +929,24 @@
 
     <div class="social-proof">
       <p class="social-text">
-        Free to install · No account required · <strong>0 uninstalls</strong> · <strong><span id="install-count">37</span> installs and counting</strong>
+        Free to install · No account required · <strong>0 uninstalls</strong> · <strong><span id="install-count">70</span> installs and counting</strong>
       </p>
     </div>
   </div>
 
-  <!-- Browser mockup -->
+  <!-- Video demo -->
   <div class="hero-right">
-    <div class="browser-mock">
-      <div class="browser-bar">
-        <div class="browser-dots">
-          <div class="dot dot-r"></div>
-          <div class="dot dot-y"></div>
-          <div class="dot dot-g"></div>
-        </div>
-        <div class="browser-url">medium.com/article/the-future-of...</div>
-      </div>
-      <div class="readr-ui">
-        <div class="readr-toolbar-mock">
-          <span class="readr-badge">✦ READR</span>
-          <span class="mock-pill active">☽ Dark</span>
-          <span class="mock-pill">A–</span>
-          <span class="mock-pill">A+</span>
-          <span class="mock-pill">Med</span>
-          <span class="mock-pill" style="background: rgba(201,168,76,0.2); color: var(--gold);">⬇ PDF</span>
-        </div>
-        <div class="readr-content-mock">
-          <div class="mock-img">[ article image ]</div>
-          <div class="mock-h1">The Future of Deep Work in a Distracted World</div>
-          <div class="mock-line"></div>
-          <div class="mock-line"></div>
-          <div class="mock-line short"></div>
-          <div class="mock-spacer"></div>
-          <div class="mock-line"></div>
-          <div class="mock-line"></div>
-          <div class="mock-line xshort"></div>
-          <div class="mock-spacer"></div>
-          <div class="mock-line"></div>
-          <div class="mock-line short"></div>
-        </div>
-      </div>
+    <div class="video-wrap">
+      <video
+        src="readr-demo.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        aria-label="READR demo — cluttered page to clean reading view in one click"
+      ></video>
+      <div class="video-caption">✦ One click. Any site. Clean page.</div>
     </div>
   </div>
 </section>
