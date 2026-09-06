@@ -1,0 +1,27 @@
+READR — Proprietary License
+Copyright (c) 2026 wushu75. All rights reserved.
+
+This source code is made publicly viewable for transparency and reference only.
+It is NOT open-source software.
+
+You MAY:
+  - View and read the source code.
+  - Reference it for personal, educational, or evaluation purposes.
+
+You MAY NOT, without prior written permission from the copyright holder:
+  - Use this code, in whole or in part, in any product or service.
+  - Copy, modify, merge, publish, distribute, sublicense, or sell copies.
+  - Republish this extension or any derivative to any extension store or
+    distribution channel.
+
+Third-party components included in the packaged extension are licensed
+separately by their respective authors:
+  - Readability.js (Mozilla) — Apache-2.0
+  - jsPDF — MIT
+  - ExtPay.js (ExtensionPay) — AGPL-3.0 (not committed to this repository)
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR
+OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+To request usage rights, contact: wushumaster75@gmail.com
