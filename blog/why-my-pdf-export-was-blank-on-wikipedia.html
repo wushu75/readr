@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── SEO ─────────────────────────────────────────────── -->
+  <title>Why my Chrome extension's PDF export was blank on Wikipedia (html2canvas + CSP) — READR</title>
+  <meta name="description" content="A debugging post-mortem: html2canvas returned blank PDFs on Wikipedia because strict Content-Security-Policies block its page-clone step. The fix was to stop rasterizing and render the PDF from text with jsPDF." />
+  <meta name="keywords" content="html2canvas blank, html2canvas csp, html2canvas blank canvas, chrome extension pdf export, jsPDF text pdf, html2canvas wikipedia, content security policy html2canvas" />
+  <meta name="author" content="Tony Momoh" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://wushu75.github.io/readr/blog/why-my-pdf-export-was-blank-on-wikipedia.html" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://wushu75.github.io/readr/blog/why-my-pdf-export-was-blank-on-wikipedia.html" />
+  <meta property="og:title" content="Why my Chrome extension's PDF export was blank on Wikipedia (html2canvas + CSP)" />
+  <meta property="og:description" content="A debugging post-mortem on html2canvas returning blank output under strict CSPs, and the jsPDF fix." />
+  <meta property="og:image" content="https://wushu75.github.io/readr/og-image.png" />
+  <meta property="og:site_name" content="READR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:creator" content="@tonylab_net" />
+  <meta name="twitter:title" content="Why my Chrome extension's PDF export was blank on Wikipedia (html2canvas + CSP)" />
+  <meta name="twitter:image" content="https://wushu75.github.io/readr/og-image.png" />
+
+  <link rel="icon" type="image/png" href="../icons/icon48.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Why my Chrome extension's PDF export was blank on Wikipedia (html2canvas + CSP)",
+    "author": { "@type": "Person", "name": "Tony Momoh", "url": "https://mrmomoh.substack.com" },
+    "datePublished": "2026-10-10",
+    "image": "https://wushu75.github.io/readr/og-image.png",
+    "publisher": { "@type": "Organization", "name": "READR" },
+    "mainEntityOfPage": "https://wushu75.github.io/readr/blog/why-my-pdf-export-was-blank-on-wikipedia.html"
+  }
+  </script>
+
+  <style>
+    :root {
+      --ink:   #0d0d0d;
+      --paper: #f2efe8;
+      --body:  #cfc9bc;
+      --gold:  #c9a84c;
+      --gold2: #e8c97a;
+      --muted: #8a8070;
+      --line:  rgba(242,239,232,0.12);
+      --card:  #141311;
+      --serif: 'Playfair Display', Georgia, serif;
+      --mono:  'DM Mono', monospace;
+      --sans:  'DM Sans', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--ink);
+      color: var(--body);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { color: var(--gold2); }
+
+    /* Nav */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 7vw;
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(13,13,13,0.9);
+      backdrop-filter: blur(8px);
+    }
+    .nav-logo { font-family: var(--serif); font-weight: 900; font-size: 22px; color: var(--paper); letter-spacing: 0.02em; }
+    .nav-logo a { color: var(--paper); }
+    .nav-links { list-style: none; display: flex; gap: 28px; }
+    .nav-links a { font-family: var(--mono); font-size: 13px; color: var(--body); letter-spacing: 0.02em; }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* Article */
+    .wrap { max-width: 740px; margin: 0 auto; padding: 72px 7vw 40px; }
+    .eyebrow {
+      font-family: var(--mono); font-size: 12px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 22px;
+    }
+    h1 {
+      font-family: var(--serif); font-weight: 900; color: var(--paper);
+      font-size: clamp(32px, 6vw, 52px); line-height: 1.1; letter-spacing: -0.01em;
+      margin-bottom: 24px;
+    }
+    .post-meta { font-family: var(--mono); font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    .rule { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+
+    article { font-size: 18px; }
+    article p { margin: 0 0 1.5em; }
+    article h2 {
+      font-family: var(--serif); font-weight: 700; color: var(--paper);
+      font-size: clamp(24px, 4vw, 32px); line-height: 1.2;
+      margin: 2.2em 0 0.7em;
+    }
+    article strong { color: var(--paper); font-weight: 500; }
+    article ul, article ol { margin: 0 0 1.5em; padding-left: 1.4em; }
+    article li { margin-bottom: 0.6em; }
+
+    /* Code */
+    pre {
+      background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+      padding: 20px 22px; margin: 0 0 1.6em; overflow-x: auto;
+      font-family: var(--mono); font-size: 14px; line-height: 1.6; color: #e8e5de;
+    }
+    pre .c { color: var(--muted); } /* comment */
+    code {
+      font-family: var(--mono); font-size: 0.88em;
+      background: rgba(201,168,76,0.12); color: var(--gold2);
+      padding: 2px 6px; border-radius: 4px;
+    }
+    pre code { background: none; color: inherit; padding: 0; }
+
+    blockquote {
+      border-left: 2px solid var(--gold);
+      padding: 4px 0 4px 22px; margin: 0 0 1.6em;
+      font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--paper);
+    }
+
+    .callout {
+      background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--gold);
+      border-radius: 10px; padding: 20px 24px; margin: 0 0 1.8em;
+    }
+    .callout p:last-child { margin-bottom: 0; }
+
+    /* CTA */
+    .cta {
+      margin-top: 56px; padding: 32px; border: 1px solid var(--line); border-radius: 14px;
+      background: var(--card); text-align: center;
+    }
+    .cta h3 { font-family: var(--serif); font-weight: 700; color: var(--paper); font-size: 24px; margin-bottom: 10px; }
+    .cta p { font-size: 16px; margin-bottom: 20px; }
+    .btn {
+      display: inline-block; font-family: var(--mono); font-size: 14px; letter-spacing: 0.02em;
+      background: var(--gold); color: var(--ink); font-weight: 500;
+      padding: 12px 26px; border-radius: 8px; transition: background 0.15s;
+    }
+    .btn:hover { background: var(--gold2); color: var(--ink); }
+    .back { display: inline-block; font-family: var(--mono); font-size: 13px; margin-top: 40px; color: var(--muted); }
+    .back:hover { color: var(--gold); }
+
+    footer {
+      border-top: 1px solid var(--line); margin-top: 72px;
+      padding: 40px 7vw; text-align: center;
+    }
+    .footer-logo { font-family: var(--serif); font-weight: 900; color: var(--paper); font-size: 20px; margin-bottom: 10px; }
+    .footer-copy { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .footer-copy a { color: var(--gold); }
+
+    @media (max-width: 640px) { .nav-links { gap: 16px; } .nav-links li:nth-child(2) { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><a href="../">READR</a></div>
+  <ul class="nav-links">
+    <li><a href="../#features">Features</a></li>
+    <li><a href="../#how">How it works</a></li>
+    <li><a href="./">Blog</a></li>
+    <li><a href="../readr-privacy.html">Privacy</a></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+  <div class="eyebrow">Engineering · Post-mortem</div>
+  <h1>Why my Chrome extension's PDF export was blank on Wikipedia</h1>
+  <p class="post-meta">By Tony Momoh · 10 October 2026 · 6 min read</p>
+  <hr class="rule" />
+
+  <article>
+    <p>I build a reader-mode Chrome extension called <a href="../">READR</a>. One click turns any cluttered article into a clean reading view, and a Pro feature exports that view as a PDF. The PDF export worked beautifully in testing &mdash; and then produced completely blank PDFs on Wikipedia. Every time. No error, no warning, just white pages.</p>
+
+    <p>Here's the whole debugging arc, because the real cause turned out to be something I'd never have guessed from the symptom, and the lesson generalises to anyone doing client-side &ldquo;HTML&nbsp;&rarr;&nbsp;PDF&rdquo; or &ldquo;HTML&nbsp;&rarr;&nbsp;image&rdquo; in the browser.</p>
+
+    <h2>The setup</h2>
+    <p>The first version of PDF export used the popular <code>html2canvas</code> + <code>jsPDF</code> combo (via <code>html2pdf.js</code>). The idea is simple: rasterize the reader view into an image, then drop that image into a PDF.</p>
+    <pre><code><span class="c">// v1 — the approach that failed</span>
+const opt = {
+  filename:    'article.pdf',
+  image:       { type: 'jpeg', quality: 0.95 },
+  html2canvas: { scale: 2, useCORS: true },
+  jsPDF:       { unit: 'mm', format: 'a4' },
+};
+await html2pdf().set(opt).from(readerElement).save();</code></pre>
+    <p>On my own test pages, this produced a gorgeous PDF. Ship it.</p>
+
+    <h2>The symptom</h2>
+    <p>Users exporting real articles &mdash; Wikipedia especially &mdash; got a blank page. The file downloaded, it was a valid PDF, it just had nothing on it.</p>
+    <p>My first theories were all wrong, and all plausible:</p>
+    <ul>
+      <li><strong>Positioning.</strong> Maybe the off-screen render target had the wrong coordinates. I tried <code>position: fixed</code>, then <code>absolute</code> off-screen, then on-screen behind an overlay. No change.</li>
+      <li><strong>Scroll offset.</strong> html2canvas is sensitive to scroll position; maybe a long, scrolled page threw off the capture. Reset scroll, passed <code>scrollY: 0</code>. No change.</li>
+      <li><strong>Image CORS.</strong> Cross-origin images can taint a canvas. Set <code>useCORS: true</code>, waited for images to load. No change.</li>
+    </ul>
+    <p>I burned hours here. Every fix was reasonable. None worked.</p>
+
+    <h2>The diagnostic that actually cracked it</h2>
+    <p>Instead of guessing, I opened the blank PDF and inspected its internals:</p>
+    <pre><code>pages:          1
+producer:       jsPDF
+XObject images: False</code></pre>
+    <p>That last line is the whole story. <code>html2pdf</code> always embeds the canvas as an image object (an &ldquo;XObject&rdquo;) in the PDF. <strong>There was no image object at all.</strong> So the problem wasn't that the image was mis-positioned, or white, or tainted &mdash; it was that html2canvas had handed back an <em>empty canvas</em>, and jsPDF dutifully wrote a page with nothing on it.</p>
+    <div class="callout">
+      <p>A blank rasterised PDF with no embedded image = the canvas was empty, not the layout wrong. That reframed everything.</p>
+    </div>
+    <p>Then the pattern clicked: every page that failed was Wikipedia, GitHub, or a big news site. Every page that worked was a small blog or my own site. The failing sites all had one thing in common &mdash; a <strong>strict Content-Security-Policy</strong>.</p>
+
+    <h2>Why html2canvas dies under a strict CSP</h2>
+    <p>Here's the part I didn't understand until this bug. html2canvas does <strong>not</strong> take a screenshot. The browser gives extensions no &ldquo;screenshot this element&rdquo; primitive. Instead, html2canvas re-implements a rendering engine in JavaScript: it clones the target into a sandboxed context, reads the computed styles of every node, and paints them onto a <code>&lt;canvas&gt;</code> by hand.</p>
+    <p>That clone-and-render step is what a strict CSP blocks. On a page like Wikipedia, the policy prevents the machinery html2canvas needs, and rather than throwing, it fails quietly and returns a blank canvas. You get a valid, empty result.</p>
+    <p>The uncomfortable conclusion: <strong>client-side page rasterization is fundamentally fragile on arbitrary websites.</strong> You don't control the CSP of the pages your users visit, and a large share of the most-visited sites on the internet ship strict ones. No amount of positioning or CORS tuning fixes a rendering step the page won't allow.</p>
+
+    <h2>The fix: stop rasterizing</h2>
+    <p>The insight was that I didn't need a <em>picture</em> of the article &mdash; I had the article's <em>text and structure</em> already, because my extension extracts it with Readability. So instead of screenshotting the DOM, I generated the PDF directly from the content with jsPDF's text API. No canvas, no clone, no CSP dependency.</p>
+    <pre><code><span class="c">// v2 — CSP-independent, works everywhere</span>
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+const margin = 54;
+const contentWidth = doc.internal.pageSize.getWidth() - margin * 2;
+const pageHeight   = doc.internal.pageSize.getHeight();
+let y = margin;
+
+function writeBlock(text, { size, bold }) {
+  doc.setFont('times', bold ? 'bold' : 'normal');
+  doc.setFontSize(size);
+  for (const line of doc.splitTextToSize(text, contentWidth)) {
+    if (y &gt; pageHeight - margin) { doc.addPage(); y = margin; }
+    doc.text(line, margin, y);
+    y += size * 1.35;
+  }
+  y += size * 0.6;
+}
+
+for (const el of articleBody.children) {
+  const tag = el.tagName.toLowerCase();
+  if (tag === 'h1' || tag === 'h2') writeBlock(el.textContent, { size: 16, bold: true });
+  else if (tag === 'h3')            writeBlock(el.textContent, { size: 13, bold: true });
+  else                              writeBlock(el.textContent, { size: 11.5 });
+}
+
+doc.save('article.pdf');</code></pre>
+    <p>This:</p>
+    <ul>
+      <li><strong>Works on every site</strong>, because it never touches the page's rendering pipeline or CSP.</li>
+      <li>Produces <strong>selectable, searchable text</strong> instead of a flat image.</li>
+      <li>Makes tiny files.</li>
+    </ul>
+    <p>The trade-off is honest: because I'm rendering structured text rather than a pixel-perfect snapshot, complex visual layouts (Wikipedia's infoboxes, intricate tables) flatten into simpler text. For a <em>reading</em> PDF, that's the right call &mdash; and it's the price of working reliably everywhere.</p>
+    <p>A couple of implementation notes if you go this route: jsPDF's text rendering is synchronous, so on a long article it can freeze the tab &mdash; yield to the event loop periodically (<code>await new Promise(r =&gt; setTimeout(r))</code> every N blocks). And for images, you can still embed them best-effort by re-loading each with <code>crossOrigin = 'anonymous'</code>, drawing to a canvas, and calling <code>toDataURL()</code> &mdash; sites that send permissive CORS headers work, others you skip.</p>
+
+    <h2>The transferable lessons</h2>
+    <ol>
+      <li><strong>html2canvas is the wrong tool if your code has to run on arbitrary sites.</strong> It's great for content you control; it's a liability across the open web, because strict CSPs silently break it.</li>
+      <li><strong>Inspect the artifact, not just the symptom.</strong> &ldquo;Blank PDF&rdquo; was ambiguous. &ldquo;PDF with no embedded image object&rdquo; pointed straight at an empty canvas and saved me from another day of positioning theories.</li>
+      <li><strong>A false lead that's individually plausible is the most expensive kind.</strong> Positioning, scroll, and CORS were all real html2canvas gotchas &mdash; which is exactly why I kept chasing them past the point of usefulness. The unlock was stepping back to find what the <em>failing cases had in common</em> (CSP), not debugging any single case harder.</li>
+      <li><strong>If you already have the data, don't screenshot the DOM to get it back.</strong> I was rasterizing a page to recover text I'd already extracted. Rendering from the source is simpler, faster, more robust, and more accessible.</li>
+    </ol>
+
+    <div class="cta">
+      <h3>READR — Reader Mode &amp; PDF Export</h3>
+      <p>A private, local reader mode for Chrome. Clean reading view + PDF export that works on every site. No accounts, no servers.</p>
+      <a class="btn" href="https://chromewebstore.google.com/detail/readr-%E2%80%93-clean-page-one-cl/acpeognnfhdbfdmdpkfbjgppjpgpekia" target="_blank" rel="noopener">Install free &rarr;</a>
+    </div>
+
+    <a class="back" href="./">&larr; All posts</a>
+  </article>
+</div>
+
+<footer>
+  <div class="footer-logo">READR</div>
+  <div class="footer-copy">© 2026 READR · Made for readers, by readers · ⭐ <a href="https://chromewebstore.google.com/detail/readr-%E2%80%93-clean-page-one-cl/acpeognnfhdbfdmdpkfbjgppjpgpekia/reviews" target="_blank" rel="noopener">Leave a review</a></div>
+</footer>
+
+</body>
+</html>

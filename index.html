@@ -992,6 +992,7 @@
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#how">How it works</a></li>
+    <li><a href="blog/" data-en="Blog" data-zh="博客" data-tw="部落格">Blog</a></li>
     <li><a href="readr-privacy.html" data-en="Privacy" data-zh="隐私" data-tw="隱私">Privacy</a></li>
   </ul>
   <div class="lang-toggle">
@@ -1223,82 +1224,6 @@
   }
 </script>
 
-<script>
-  // ── Language toggle ──────────────────────────────────────────
-  const translations = {
-    en: {
-      eyebrow: '✦ Chrome Extension · Free to start',
-      title: 'Clean<br/><em>page,</em><br/>one click.',
-      tagline: '// reader mode that actually works',
-      quote: '"Finally — reader mode that works on <strong>any</strong> site. No ads. No clutter. One click → <strong>perfect PDF.</strong>"',
-      cta: 'Install Extension',
-      endorsed: 'Organically recommended by Chrome · No ad spend',
-      proofPrefix: 'Free to install · No account required · ',
-      proofSuffix: ' installs and counting'
-    },
-    zh: {
-      eyebrow: '✦ Chrome 扩展 · 免费开始',
-      title: '一键<br/><em>清洁</em><br/>页面。',
-      tagline: '// 真正好用的阅读模式',
-      quote: '"终于 — 适用于<strong>任何</strong>网站的阅读模式。无广告。无干扰。一键 → <strong>完美PDF。</strong>"',
-      cta: '免费安装',
-      endorsed: 'Chrome 有机推荐 · 零广告费用',
-      proofPrefix: '免费安装 · 无需账户 · ',
-      proofSuffix: ' 次安装，持续增长'
-    },
-    tw: {
-      eyebrow: '✦ Chrome 擴充功能 · 免費開始',
-      title: '一鍵<br/><em>清潔</em><br/>頁面。',
-      tagline: '// 真正好用的閱讀模式',
-      quote: '"終於 — 適用於<strong>任何</strong>網站的閱讀模式。無廣告。無干擾。一鍵 → <strong>完美PDF。</strong>"',
-      cta: '免費安裝',
-      endorsed: 'Chrome 有機推薦 · 零廣告費用',
-      proofPrefix: '免費安裝 · 無需帳戶 · ',
-      proofSuffix: ' 次安裝，持續增長'
-    }
-  };
-
-  function setLanguage(lang) {
-    const t = translations[lang];
-    if (!t) return;
-    const q = sel => document.querySelector(sel);
-    const eyebrow = q('.hero-eyebrow');
-    const title   = q('.hero-title');
-    const tagline = q('.hero-tagline');
-    const quote   = q('.hero-quote');
-    const ctaSpan = q('.cta-text');
-    const endorsed = q('.endorsed-text');
-    const proofPre = q('.proof-prefix');
-    const proofSuf = q('.proof-suffix');
-    if (eyebrow) eyebrow.textContent = t.eyebrow;
-    if (title)   title.innerHTML     = t.title;
-    if (tagline) tagline.textContent = t.tagline;
-    if (quote)   quote.innerHTML     = t.quote;
-    if (ctaSpan) ctaSpan.innerHTML   = t.cta;
-    if (endorsed) endorsed.textContent = t.endorsed;
-    if (proofPre) proofPre.textContent = t.proofPrefix;
-    if (proofSuf) proofSuf.textContent = t.proofSuffix;
-    document.querySelectorAll('.lang-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.lang === lang);
-    });
-    document.documentElement.lang = lang === 'en' ? 'en' : lang === 'zh' ? 'zh-CN' : 'zh-TW';
-    localStorage.setItem('readr-lang', lang);
-  }
-
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
-  });
-
-  // Auto-detect browser language on first visit
-  const savedLang = localStorage.getItem('readr-lang');
-  if (savedLang && savedLang !== 'en') {
-    setLanguage(savedLang);
-  } else {
-    const bl = navigator.language || '';
-    if (bl.startsWith('zh-TW') || bl.startsWith('zh-HK')) setLanguage('tw');
-    else if (bl.startsWith('zh')) setLanguage('zh');
-  }
-</script>
 
 </body>
 </html>
